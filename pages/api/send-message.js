@@ -2,12 +2,10 @@ import { getSystemMessage, getChatHistory, addChatMessage } from '../../utils/ca
 const { ironOptions } = require('../../utils/iron-options');
 import { withIronSessionApiRoute } from 'iron-session/next';
 
-// const sessionStore = {}; // In-memory storage for session chat histories
 const MAX_MESSAGES = 1000; // Limit the number of messages in context to avoid token overload
 
 export default withIronSessionApiRoute(
   async function handler(req, res) {
-// export default async function handler(req, res) {
     if (req.method !== 'POST') {
       res.status(405).send({ error: 'Method not allowed' });
       return;
@@ -47,7 +45,6 @@ export default withIronSessionApiRoute(
       console.log(history);
       
       // Trim history to fit within context window
-      // let history = sessionStore[sessionId];
       if (history.length > MAX_MESSAGES) {
         history = history.slice(-MAX_MESSAGES);
       }
