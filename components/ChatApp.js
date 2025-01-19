@@ -69,7 +69,7 @@ const ChatApp = () => {
     if (chatHistory.length > 0) {
       const lastMessage = chatHistory[chatHistory.length - 1];
       if (lastMessage.sender === 'user' && chatHistoryRef.current) {
-        chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+        chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight + '100';
       }
     }
   }, [chatHistory]);
@@ -136,6 +136,10 @@ const ChatApp = () => {
     const newMessage = { sender: 'user', text: userInput };
     setChatHistory((prevHistory) => [...prevHistory, newMessage]);
     setUserInput('');
+
+    if (chatInputRef.current) {
+      chatInputRef.current.adjustHeight();
+    }
   
     controllerRef.current = new AbortController();
   
@@ -190,7 +194,7 @@ const ChatApp = () => {
                 for (let i = 0; i < content.length; i++) {
                   if (stopTypingRef.current) break;
   
-                  await new Promise((resolve) => setTimeout(resolve, 20));
+                  await new Promise((resolve) => setTimeout(resolve, 10));
   
                   if (lastMessageRef.current) {
                     lastMessageRef.current.text += content[i];
@@ -273,11 +277,6 @@ const ChatApp = () => {
           <select
             className="form-select"
             onChange={(e) => handlePromptSelect(e.target.value)}
-            // onChange={(e) => {
-            //   const selected = prompts.find((p) => p.name === e.target.value);
-            //   setPromptTemplate(e.target.value);
-            //   if (selected) setUserInput(selected.content);
-            // }}
           >
             <option value="">Select Template</option>
             {prompts.map((p) => (

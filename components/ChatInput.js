@@ -6,6 +6,8 @@ const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessi
   // Function to adjust the textarea height dynamically
   const adjustHeight = () => {
     if (textareaRef.current) {
+      console.log('adjustHeight');
+      console.log(textareaRef.current.value);
       textareaRef.current.style.height = 'auto';
 
       setTimeout(() => {
@@ -37,13 +39,14 @@ const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessi
 
   return (
     <div
-      className="p-3 bg-light"
+      className="p-3"
       style={{
         maxWidth: '800px',
         width: '100%',
         borderTopLeftRadius: '10px',
         borderTopRightRadius: '10px',
         marginBottom: '10px',
+        background: '#e3e3e3',
       }}
     >
       <textarea
