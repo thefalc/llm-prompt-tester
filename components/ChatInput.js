@@ -51,15 +51,7 @@ const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessi
         value={userInput}
         onChange={handleChange}
         onKeyPress={handleKeyPress}
-        className="form-control mb-2"
-        style={{
-          resize: 'none',
-          height: 'auto',
-          overflowY: 'scroll',
-          maxHeight: '250px',
-          backgroundColor: '#f8f9fa',
-          border: 'none',
-        }}
+        className="form-control mb-2 textarea-no-border"
         rows="1"
         placeholder="Type your message here..."
         disabled={isProcessing}

@@ -41,6 +41,22 @@ a {
   }
 }
 
+.textarea-no-border {
+  resize: none;
+  height: auto;
+  overflow-y: scroll;
+  max-height: 250px !important;
+  background-color: #f8f9fa !important;
+  border: none !important;
+  outline: none;
+}
+
+.textarea-no-border:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .typing-effect {
   white-space: pre-wrap;
   word-break: break-word;
