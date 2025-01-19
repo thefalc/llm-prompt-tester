@@ -12,11 +12,12 @@ const ChatApp = () => {
   const [promptTemplate, setPromptTemplate] = useState('');
   const [personalities, setPersonalities] = useState([]);
   const [prompts, setPrompts] = useState([]);
+  const [showLoadingIcon, setShowLoadingIcon] = useState(false);
 
   const typingBufferRef = useRef('');
   const lastMessageRef = useRef(null);
-  const controllerRef = useRef(null);
   const stopTypingRef = useRef(false);
+  const controllerRef = useRef(null);
 
   // Fetch personalities and prompts on load
   useEffect(() => {
@@ -109,21 +110,23 @@ const ChatApp = () => {
       controllerRef.current.abort();
       stopTypingRef.current = true;
       setIsProcessing(false);
+      setShowLoadingIcon(false);
     }
   };
 
   const sendMessage = async () => {
     if (!userInput || isProcessing) return;
-
+  
     setIsProcessing(true);
+    setShowLoadingIcon(true); // Show the loading icon
     stopTypingRef.current = false;
-
+  
     const newMessage = { sender: 'user', text: userInput };
     setChatHistory((prevHistory) => [...prevHistory, newMessage]);
     setUserInput('');
-
+  
     controllerRef.current = new AbortController();
-
+  
     try {
       const response = await fetch('/api/send-message', {
         method: 'POST',
@@ -135,45 +138,48 @@ const ChatApp = () => {
         }),
         signal: controllerRef.current.signal,
       });
-
+  
       if (!response.body) {
         throw new Error('Server did not return a readable stream');
       }
-
+  
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let done = false;
       let buffer = '';
-
+  
       const aiMessage = { sender: 'ai', text: '' };
       setChatHistory((prevHistory) => {
         const updatedHistory = [...prevHistory, aiMessage];
         lastMessageRef.current = updatedHistory[updatedHistory.length - 1];
         return updatedHistory;
       });
-
+  
       while (!done) {
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
         buffer += decoder.decode(value, { stream: true });
-
+  
         let boundaryIndex;
         while ((boundaryIndex = buffer.indexOf('\n')) !== -1) {
           const line = buffer.slice(0, boundaryIndex).trim();
           buffer = buffer.slice(boundaryIndex + 1);
-
+  
           if (line) {
             try {
               const jsonData = JSON.parse(line);
               const content = jsonData.content;
-
+  
               if (content) {
+                // Stop showing the loading icon once content starts streaming
+                setShowLoadingIcon(false);
+
                 typingBufferRef.current += content;
                 for (let i = 0; i < content.length; i++) {
                   if (stopTypingRef.current) break;
-
+  
                   await new Promise((resolve) => setTimeout(resolve, 20));
-
+  
                   if (lastMessageRef.current) {
                     lastMessageRef.current.text += content[i];
                     setChatHistory((prevHistory) => [...prevHistory]);
@@ -195,98 +201,97 @@ const ChatApp = () => {
       setIsProcessing(false);
       controllerRef.current = null;
       stopTypingRef.current = false;
+      setShowLoadingIcon(false);
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevent newline in textarea
-      sendMessage();
-    }
-  };
+  // Dynamic layout styles based on chat history presence
+  const layoutStyle = chatHistory.length === 0 ? 'd-flex flex-column justify-content-center align-items-center vh-100' : 'd-flex flex-column align-items-center';
 
   return (
     <div className="d-flex vh-100">
       {/* Options Section */}
       <div className="options-container p-3 border-end d-flex flex-column" style={{ width: '250px' }}>
-        <div className="mb-3">
-          <textarea
-            value={systemMessage}
-            onChange={(e) => setSystemMessage(e.target.value)}
-            className="form-control"
-            rows="3"
-            placeholder="Enter the system message here..."
-          />
-          <button
-            className="btn btn-primary w-100 mt-2"
-            onClick={saveSystemMessage}
-            disabled={isSaving}
-          >
-            {isSaving === true ? 'Saving...' : isSaving === 'Saved' ? 'Saved' : 'Save System Message'}
-          </button>
-        </div>
+        <textarea
+          value={systemMessage}
+          onChange={(e) => setSystemMessage(e.target.value)}
+          className="form-control mb-3"
+          rows="3"
+          placeholder="Enter the system message here..."
+        />
+        <button
+          className="btn btn-primary w-100 mb-3"
+          onClick={saveSystemMessage}
+          disabled={isSaving}
+        >
+          Save System Message
+        </button>
 
-        <div className="mb-4">
+        <div className="mb-3">
           <label className="form-label">Personality</label>
           <select
-            value={personality}
-            onChange={(e) => {
-              setPersonality(e.target.value);
-              const selectedPersonality = personalities.find((p) => p.name === e.target.value);
-              if (selectedPersonality) {
-                setSystemMessage(selectedPersonality.content);
-              }
-            }}
             className="form-select"
+            onChange={(e) => {
+              const selected = personalities.find((p) => p.name === e.target.value);
+              setPersonality(e.target.value);
+              if (selected) setSystemMessage(selected.content);
+            }}
           >
             <option value="">Select Personality</option>
             {personalities.map((p) => (
-              <option key={p.name} value={p.name}>{p.name}</option>
+              <option key={p.name} value={p.name}>
+                {p.name}
+              </option>
             ))}
           </select>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-3">
           <label className="form-label">Prompt Template</label>
           <select
-            value={promptTemplate}
-            onChange={(e) => {
-              setPromptTemplate(e.target.value);
-              const selectedPrompt = prompts.find((p) => p.name === e.target.value);
-              if (selectedPrompt) {
-                setUserInput(selectedPrompt.content);
-              }
-            }}
             className="form-select"
+            onChange={(e) => {
+              const selected = prompts.find((p) => p.name === e.target.value);
+              setPromptTemplate(e.target.value);
+              if (selected) setUserInput(selected.content);
+            }}
           >
             <option value="">Select Template</option>
             {prompts.map((p) => (
-              <option key={p.name} value={p.name}>{p.name}</option>
+              <option key={p.name} value={p.name}>
+                {p.name}
+              </option>
             ))}
           </select>
         </div>
 
-        <button className="btn btn-secondary w-100 mt-auto" onClick={clearChat}>Clear Chat</button>
+        <button className="btn btn-secondary w-100 mt-auto" onClick={clearChat}>
+          Clear Chat
+        </button>
       </div>
 
       {/* Chat Section */}
-      <div className="flex-grow-1 d-flex flex-column align-items-center">
-        <h2 className="text-center py-2 d-flex align-items-center justify-content-center" style={{ fontSize: '2rem', maxWidth: '800px', width: '100%' }}>
+      <div className={`flex-grow-1 ${layoutStyle}`}>
+        <h2 className="text-center py-2" style={{ fontSize: '2rem' }}>
           Nimbus Prompter 2000
-          <img src="nimbus-2000.webp" alt="Broomstick" className="ms-2" style={{ height: '2rem' }} />
         </h2>
 
-        <div className="flex-grow-1 chat-history p-3" style={{ overflowY: 'auto', whiteSpace: 'pre-wrap', backgroundColor: '#ffffff', maxWidth: '800px', width: '100%' }}>
-          {chatHistory.map((message, index) => (
-            <div
-              key={index}
-              className={`mb-3 chat-message ${message.sender === 'user' ? 'user-message' : 'ai-message'}`}
-            >
-              {message.sender === 'ai' && <strong>AI:</strong>}
-              <span>{message.text}</span>
-            </div>
-          ))}
-        </div>
+        {chatHistory.length > 0 && (
+          <div className="flex-grow-1 chat-history p-3" style={{ overflowY: 'auto', whiteSpace: 'pre-wrap', backgroundColor: '#ffffff', maxWidth: '800px', width: '100%' }}>
+            {chatHistory.map((message, index) => {
+            const isLastAIMessage = message.sender === 'ai' && index === chatHistory.length - 1;
+            return (
+              <div key={index} className={`mb-3 ${message.sender === 'user' ? 'user-message' : 'ai-message'}`}>
+                <strong>{message.sender === 'ai' ? 'AI: ' : ''}</strong>
+                {isLastAIMessage && showLoadingIcon && (
+                  <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+                )}
+                <span className="ms-2">{message.text}</span>
+              </div>
+            );
+          })}
+          </div>
+        )}
 
         <ChatInput
           userInput={userInput}

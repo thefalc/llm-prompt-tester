@@ -42,7 +42,6 @@ export default withIronSessionApiRoute(
 
       // Add the user's message to the session history
       await addChatMessage(sessionId, { role: 'user', content: message });
-      console.log(history);
       
       // Trim history to fit within context window
       if (history.length > MAX_MESSAGES) {
@@ -54,10 +53,7 @@ export default withIronSessionApiRoute(
         { role: 'system', content: systemMessage },
         ...history,
       ];
-
-      console.log('messages');
-      console.log(messages);
-
+      
       const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {

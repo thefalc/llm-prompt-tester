@@ -56,18 +56,20 @@ const AuthScreen = ({ onAuthenticate }) => {
     <div className="vh-100 d-flex justify-content-center align-items-center bg-light">
       <div className="p-4 border rounded bg-white shadow" style={{ width: '650px' }}>
         <h2 className="text-center mb-4">Welcome to Nimbus Prompter 2000</h2>
-        <input
-          type="password"
-          className="form-control mb-3"
-          placeholder="Password"
-          value={password}
-          onKeyPress={handleKeyPress}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {loginError && <div className="text-danger mb-3 text-center">{loginError}</div>}
-        <button className="btn btn-primary w-100" onClick={handleLogin}>
-          Alohomora
-        </button>
+        <div style={{ paddingLeft: '100px', paddingRight: '100px' }}>
+          <input
+            type="password"
+            className="form-control mb-3"
+            placeholder="Password"
+            value={password}
+            onKeyPress={handleKeyPress}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {loginError && <div className="text-danger mb-3 text-center">{loginError}</div>}
+          <button className="btn btn-primary w-100" onClick={handleLogin}>
+            Alohomora
+          </button>
+        </div>
       </div>
     </div>
   );
