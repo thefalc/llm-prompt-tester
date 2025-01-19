@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import ChatInput from './ChatInput';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeSanitize from 'rehype-sanitize';
+import remarkBreaks from 'remark-breaks';
 
 const ChatApp = () => {
   const [systemMessage, setSystemMessage] = useState('');
@@ -13,6 +17,7 @@ const ChatApp = () => {
   const [personalities, setPersonalities] = useState([]);
   const [prompts, setPrompts] = useState([]);
   const [showLoadingIcon, setShowLoadingIcon] = useState(false);
+  const [hasScrolledToAI, setHasScrolledToAI] = useState(false);
 
   const typingBufferRef = useRef('');
   const lastMessageRef = useRef(null);
@@ -20,6 +25,7 @@ const ChatApp = () => {
   const controllerRef = useRef(null);
   const chatHistoryRef = useRef(null);
   const chatInputRef = useRef(null);
+  const aiStartRef = useRef(null);
 
   // Fetch personalities and prompts on load
   useEffect(() => {
@@ -71,6 +77,24 @@ const ChatApp = () => {
       if (lastMessage.sender === 'user' && chatHistoryRef.current) {
         chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight + '100';
       }
+    }
+  }, [chatHistory]);
+
+  useEffect(() => {
+    const lastMessage = chatHistory[chatHistory.length - 1];
+    if (lastMessage?.sender === 'ai' && !hasScrolledToAI) {
+      if (aiStartRef.current) {
+        aiStartRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setHasScrolledToAI(true); // Set the flag to true after scrolling
+      }
+    }
+  }, [chatHistory, hasScrolledToAI]);
+
+  // Reset scroll flag when a new user message is sent
+  useEffect(() => {
+    const lastMessage = chatHistory[chatHistory.length - 1];
+    if (lastMessage?.sender === 'user') {
+      setHasScrolledToAI(false); // Reset flag for the next AI response
     }
   }, [chatHistory]);
 
@@ -194,7 +218,7 @@ const ChatApp = () => {
                 for (let i = 0; i < content.length; i++) {
                   if (stopTypingRef.current) break;
   
-                  await new Promise((resolve) => setTimeout(resolve, 10));
+                  await new Promise((resolve) => setTimeout(resolve, 1));
   
                   if (lastMessageRef.current) {
                     lastMessageRef.current.text += content[i];
@@ -303,12 +327,28 @@ const ChatApp = () => {
             {chatHistory.map((message, index) => {
             const isLastAIMessage = message.sender === 'ai' && index === chatHistory.length - 1;
             return (
-              <div key={index} className={`mb-3 ${message.sender === 'user' ? 'user-message' : 'ai-message'}`}>
-                <strong>{message.sender === 'ai' ? 'AI: ' : ''}</strong>
+              <div key={index} ref={isLastAIMessage ? aiStartRef : null} className={`mb-3 ${message.sender === 'user' ? 'user-message' : 'ai-message'}`}>
+                {/* <strong>{message.sender === 'ai' ? 'AI: ' : ''}</strong>
                 {isLastAIMessage && showLoadingIcon && (
                   <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+                )} */}
+                {message.sender === 'ai' ? (
+                  <>
+                    <strong>AI:</strong>
+                    {isLastAIMessage && showLoadingIcon && (
+                      <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+                    )}
+                    <ReactMarkdown
+                      children={message.text}
+                      remarkPlugins={[remarkGfm, remarkBreaks]}
+                      rehypePlugins={[rehypeSanitize]}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <span className="ms-2">{message.text}</span>
+                  </>
                 )}
-                <span className="ms-2">{message.text}</span>
               </div>
             );
           })}

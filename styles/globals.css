@@ -89,3 +89,65 @@ a {
   text-align: left;
   margin-left: auto;
 }
+
+.ai-message p {
+  margin: 0px; /* Adjust spacing between paragraphs */
+}
+
+.ai-message br {
+  display: none; /* Prevent rendering excessive <br> tags if they are unnecessary */
+}
+
+.user-message p {
+  margin: 0px;
+}
+
+.user-message br {
+  display: none; /* Prevent rendering excessive <br> tags if they are unnecessary */
+}
+
+.ai-message ul, .ai-message ol {
+  margin-bottom: -25px;
+  margin-top: -25px;
+}
+
+.ai-message h1 {
+  font-size: 20px;
+  margin-bottom: -10px;
+}
+
+.ai-message h2 {
+  font-size: 18px;
+  margin-bottom: -10px;
+}
+
+/* Remove margin below <li> */
+.ai-message li {
+  margin-bottom: -15px; /* Adjust spacing between <li> items */
+}
+
+/* Remove margin above and below <p> inside <li> */
+.ai-message li p {
+  margin-top: -25px; /* No margin within <li> */
+}
+
+/* Prevent line breaks between <li> and following <p> */
+.ai-message li + p {
+  margin-top: -0.5rem; /* Adjust spacing to eliminate line breaks */
+}
+
+.ai-message table {
+  width: 100%;
+}
+
+.ai-message table tr th {
+  text-align: left;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.ai-message table tr td {
+  text-align: left;
+  border: 1px solid #ccc;
+  padding: 5px;
+}

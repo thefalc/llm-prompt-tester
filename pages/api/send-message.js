@@ -51,6 +51,7 @@ export default withIronSessionApiRoute(
       // Prepare the OpenAI request body
       const messages = [
         { role: 'system', content: systemMessage },
+        { role: 'system', content: 'Format the response as markdown.' },
         ...history,
       ];
       

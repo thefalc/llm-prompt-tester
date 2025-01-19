@@ -1,13 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 
-const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessing }, ref) => {
+const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessing, stopProcessing }, ref) => {
   const textareaRef = useRef(null);
 
   // Function to adjust the textarea height dynamically
   const adjustHeight = () => {
     if (textareaRef.current) {
-      console.log('adjustHeight');
-      console.log(textareaRef.current.value);
       textareaRef.current.style.height = 'auto';
 
       setTimeout(() => {
@@ -59,17 +57,26 @@ const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessi
         placeholder="Type your message here..."
         disabled={isProcessing}
       />
-      <button
-        className="btn btn-success w-100"
-        onClick={() => {
-          if (!isProcessing && userInput.trim()) {
-            sendMessage();
-          }
-        }}
-        disabled={isProcessing || !userInput.trim()}
-      >
-        Send
-      </button>
+      {isProcessing ? (
+        <button
+          className="btn btn-danger w-100"
+          onClick={stopProcessing}
+        >
+          Stop
+        </button>
+      ) : (
+        <button
+          className="btn btn-success w-100"
+          onClick={() => {
+            if (userInput.trim()) {
+              sendMessage();
+            }
+          }}
+          disabled={!userInput.trim()}
+        >
+          Send
+        </button>
+      )}
     </div>
   );
 });
