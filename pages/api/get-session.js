@@ -20,7 +20,5 @@ export default withIronSessionApiRoute(async function handler(req, res) {
   // Retrieve chat history from the session
   const chatHistory = await getChatHistory(sessionId);
 
-  console.log(chatHistory);
-
   res.status(200).json({ chatHistory });
 }, ironOptions);

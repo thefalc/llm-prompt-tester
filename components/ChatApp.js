@@ -18,6 +18,8 @@ const ChatApp = () => {
   const lastMessageRef = useRef(null);
   const stopTypingRef = useRef(false);
   const controllerRef = useRef(null);
+  const chatHistoryRef = useRef(null);
+  const chatInputRef = useRef(null);
 
   // Fetch personalities and prompts on load
   useEffect(() => {
@@ -61,6 +63,16 @@ const ChatApp = () => {
 
     fetchData();
   }, []);
+
+  // Scroll to the bottom when the user sends a message
+  useEffect(() => {
+    if (chatHistory.length > 0) {
+      const lastMessage = chatHistory[chatHistory.length - 1];
+      if (lastMessage.sender === 'user' && chatHistoryRef.current) {
+        chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+      }
+    }
+  }, [chatHistory]);
 
   const saveSystemMessage = async () => {
     setIsSaving(true);
@@ -204,6 +216,16 @@ const ChatApp = () => {
       setShowLoadingIcon(false);
     }
   };
+  
+  const handlePromptSelect = (value) => {
+    const selected = prompts.find((p) => p.name === value);
+    if (selected) {
+      setUserInput(selected.content);
+      if (chatInputRef.current) {
+        chatInputRef.current.adjustHeight();
+      }
+    }
+  };
 
   // Dynamic layout styles based on chat history presence
   const layoutStyle = chatHistory.length === 0 ? 'd-flex flex-column justify-content-center align-items-center vh-100' : 'd-flex flex-column align-items-center';
@@ -250,11 +272,12 @@ const ChatApp = () => {
           <label className="form-label">Prompt Template</label>
           <select
             className="form-select"
-            onChange={(e) => {
-              const selected = prompts.find((p) => p.name === e.target.value);
-              setPromptTemplate(e.target.value);
-              if (selected) setUserInput(selected.content);
-            }}
+            onChange={(e) => handlePromptSelect(e.target.value)}
+            // onChange={(e) => {
+            //   const selected = prompts.find((p) => p.name === e.target.value);
+            //   setPromptTemplate(e.target.value);
+            //   if (selected) setUserInput(selected.content);
+            // }}
           >
             <option value="">Select Template</option>
             {prompts.map((p) => (
@@ -277,7 +300,7 @@ const ChatApp = () => {
         </h2>
 
         {chatHistory.length > 0 && (
-          <div className="flex-grow-1 chat-history p-3" style={{ overflowY: 'auto', whiteSpace: 'pre-wrap', backgroundColor: '#ffffff', maxWidth: '800px', width: '100%' }}>
+          <div className="flex-grow-1 chat-history p-3" ref={chatHistoryRef} style={{ overflowY: 'auto', whiteSpace: 'pre-wrap', backgroundColor: '#ffffff', maxWidth: '800px', width: '100%' }}>
             {chatHistory.map((message, index) => {
             const isLastAIMessage = message.sender === 'ai' && index === chatHistory.length - 1;
             return (
@@ -294,6 +317,7 @@ const ChatApp = () => {
         )}
 
         <ChatInput
+          ref={chatInputRef}
           userInput={userInput}
           setUserInput={setUserInput}
           sendMessage={sendMessage}

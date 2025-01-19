@@ -1,18 +1,55 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 
-const ChatInput = ({ userInput, setUserInput, sendMessage, stopProcessing, isProcessing }) => {
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevent newline in textarea
-      sendMessage();
+const ChatInput = forwardRef(({ userInput, setUserInput, sendMessage, isProcessing }, ref) => {
+  const textareaRef = useRef(null);
+
+  // Function to adjust the textarea height dynamically
+  const adjustHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 250)}px`;
+        }
+      }, 10);
     }
   };
 
+  // Expose the adjustHeight method to the parent component
+  useImperativeHandle(ref, () => ({
+    adjustHeight,
+  }));
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Prevent creating a newline
+      if (!isProcessing && userInput.trim()) {
+        sendMessage(); // Send the message
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    setUserInput(e.target.value);
+    adjustHeight();
+  };
+
   return (
-    <div className="p-3 bg-light" style={{ maxWidth: '800px', width: '100%', borderTopLeftRadius: '10px', borderTopRightRadius: '10px', marginBottom: '10px' }}>
+    <div
+      className="p-3 bg-light"
+      style={{
+        maxWidth: '800px',
+        width: '100%',
+        borderTopLeftRadius: '10px',
+        borderTopRightRadius: '10px',
+        marginBottom: '10px',
+      }}
+    >
       <textarea
+        ref={textareaRef}
         value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
+        onChange={handleChange}
         onKeyPress={handleKeyPress}
         className="form-control mb-2"
         style={{
@@ -26,22 +63,20 @@ const ChatInput = ({ userInput, setUserInput, sendMessage, stopProcessing, isPro
         rows="1"
         placeholder="Type your message here..."
         disabled={isProcessing}
-        onInput={(e) => {
-          e.target.style.height = 'auto';
-          e.target.style.height = `${Math.min(e.target.scrollHeight, 250)}px`;
-        }}
       />
-      {isProcessing ? (
-        <button className="btn btn-danger w-100" onClick={stopProcessing}>
-          Stop
-        </button>
-      ) : (
-        <button className="btn btn-success w-100" onClick={sendMessage}>
-          Send
-        </button>
-      )}
+      <button
+        className="btn btn-success w-100"
+        onClick={() => {
+          if (!isProcessing && userInput.trim()) {
+            sendMessage();
+          }
+        }}
+        disabled={isProcessing || !userInput.trim()}
+      >
+        Send
+      </button>
     </div>
   );
-};
+});
 
 export default ChatInput;

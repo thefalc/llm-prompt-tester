@@ -41,16 +41,6 @@ a {
   }
 }
 
-/* .chat-container {
-  font-family: Arial, sans-serif;
-}
-
-.chat-message {
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-} */
-
 .typing-effect {
   white-space: pre-wrap;
   word-break: break-word;
@@ -80,6 +70,6 @@ a {
   border-radius: 10px;
   max-width: 80%;
   align-self: flex-end;
-  text-align: right;
+  text-align: left;
   margin-left: auto;
 }
