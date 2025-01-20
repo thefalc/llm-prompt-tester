@@ -4,10 +4,6 @@ import { withIronSessionApiRoute } from 'iron-session/next';
 
 const MAX_MESSAGES = 1000; // Limit the number of messages in context to avoid token overload
 
-export const config = {
-  runtime: 'edge',
-};
-
 export default withIronSessionApiRoute(
   async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -69,6 +65,7 @@ export default withIronSessionApiRoute(
           model: 'gpt-4',
           messages,
           stream: true,
+          max_tokens: 2048,
         }),
       });
 
