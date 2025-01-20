@@ -129,6 +129,7 @@ a {
 /* Remove margin above and below <p> inside <li> */
 .ai-message li p {
   margin-top: -25px; /* No margin within <li> */
+  margin-bottom: -10px;
 }
 
 /* Prevent line breaks between <li> and following <p> */
@@ -150,4 +151,31 @@ a {
   text-align: left;
   border: 1px solid #ccc;
   padding: 5px;
+}
+
+@font-face {
+  font-family: 'HarryP';
+  src: url('/HARRYP__.TTF') format('truetype');
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -100%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+h2.title {
+  color: transparent;
+  font-size: 3rem;
+  font-family: 'HarryP', serif;
+  color: #333;
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(90deg, #ffdf00, #6a0dad, #ffdf00);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 3s infinite linear;
 }

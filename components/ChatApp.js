@@ -136,6 +136,8 @@ const ChatApp = () => {
 
       setChatHistory([]);
       setSystemMessage('');
+      setPromptTemplate('');
+      setPersonality('');
     } catch (error) {
       console.error('Error clearing chat session:', error);
     }
@@ -248,6 +250,7 @@ const ChatApp = () => {
   const handlePromptSelect = (value) => {
     const selected = prompts.find((p) => p.name === value);
     if (selected) {
+      setPromptTemplate(value);
       setUserInput(selected.content);
       if (chatInputRef.current) {
         chatInputRef.current.adjustHeight();
@@ -281,6 +284,7 @@ const ChatApp = () => {
           <label className="form-label">Personality</label>
           <select
             className="form-select"
+            value={personality}
             onChange={(e) => {
               const selected = personalities.find((p) => p.name === e.target.value);
               setPersonality(e.target.value);
@@ -300,6 +304,7 @@ const ChatApp = () => {
           <label className="form-label">Prompt Template</label>
           <select
             className="form-select"
+            value={promptTemplate}
             onChange={(e) => handlePromptSelect(e.target.value)}
           >
             <option value="">Select Template</option>
@@ -318,9 +323,12 @@ const ChatApp = () => {
 
       {/* Chat Section */}
       <div className={`flex-grow-1 ${layoutStyle}`}>
-        <h2 className="text-center py-2" style={{ fontSize: '2rem' }}>
-          Nimbus Prompter 2000
-        </h2>
+      <h2
+        className="text-center py-2 title"
+      >
+        Nimbus Prompter 2000
+        <img src="nimbus-2000.webp" alt="Broomstick" className="ms-2" style={{ height: '2rem' }} />
+      </h2>
 
         {chatHistory.length > 0 && (
           <div className="flex-grow-1 chat-history p-3" ref={chatHistoryRef} style={{ overflowY: 'auto', whiteSpace: 'pre-wrap', backgroundColor: '#ffffff', maxWidth: '800px', width: '100%' }}>
@@ -328,10 +336,6 @@ const ChatApp = () => {
             const isLastAIMessage = message.sender === 'ai' && index === chatHistory.length - 1;
             return (
               <div key={index} ref={isLastAIMessage ? aiStartRef : null} className={`mb-3 ${message.sender === 'user' ? 'user-message' : 'ai-message'}`}>
-                {/* <strong>{message.sender === 'ai' ? 'AI: ' : ''}</strong>
-                {isLastAIMessage && showLoadingIcon && (
-                  <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
-                )} */}
                 {message.sender === 'ai' ? (
                   <>
                     <strong>AI:</strong>

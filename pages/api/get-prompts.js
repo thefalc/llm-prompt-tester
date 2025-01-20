@@ -5,9 +5,6 @@ export default function handler(req, res) {
     return;
   }
 
-  // Prompt ideas: have 3-5 good prompts, task is to try them out and then team up to try modifying them to apply to Confluent
-  // or you can try to come up with your own thing
-
   // Hardcoded list of prompts
   const prompts = [
     {
@@ -154,8 +151,117 @@ Generate a report that includes:
 
 Output Format:
 Deliver insights in a summarized table and include a list of recommended actions for the marketing team to optimize campaigns and revenue growth."`
+    },
+    {
+      name: 'Intro Rewrite',
+      content: `Context:
+You are a professional technical content writer with a deep understanding about what engages a technical audience.
+
+Instruction:
+Rewrite the blog introduction below to be more technical and engaging. Keep the writing concise, direct, and free of jargon. Make it sound like a human wrote it and not produced by marketing.
+
+Blog Introduction:
+Integrating Salesforce with Snowflake enables businesses to combine CRM data with data warehousing capabilities. This integration centralizes data, providing opportunities for analysis and improved decision-making. In a data-driven environment, consolidating information is increasingly important.
+
+This guide outlines the steps to set up the integration and provides recommendations for managing and analyzing data within Salesforce and Snowflake to maximize their combined utility.`
+    },
+    {
+      name: 'SEO Evaluation',
+      content: `Context:
+You are an SEO expert. You know how to evaluate and rework content so that it ranks well on Google, keeps readers engaged, and maximizes reach.
+
+Instruction:
+Provide a detailed and professional evaluation of the provided blog post from an SEO perspective, grading it on a scale from 0-100. Your evaluation should focus on the blog's ability to achieve strong search engine optimization while remaining engaging and relevant to the target audience.
+
+Assess the blog post's strengths and weaknesses in areas such as keyword usage, meta descriptions, headings structure, internal and external linking, content readability, and overall alignment with SEO best practices. Evaluate its effectiveness in balancing technical SEO elements with audience engagement. Additionally, analyze the writing quality to determine its ability to capture and hold the audience's interest, thereby increasing dwell time and reducing bounce rates.
+
+Offer specific examples of areas that excel or need improvement, including actionable suggestions to enhance search visibility, user experience, and audience retention. Provide recommendations on how many images to include (e.g., at least one image every 300-400 words) and where to place them for maximum impact, such as near key sections or to break up lengthy text.
+
+If key components of the post are missing like the metadescription, provide suggestions about what to include.
+
+If no blog post is provided below, instruct the user to include the content to enable evaluation.
+
+Blog Post:
+<< INSERT HERE >>`
+    },
+    {
+      name: 'Cold Outbound Email',
+      content: `Context:
+You are the lead copywriter for ScaleSecure, a cutting-edge data security platform that provides automated privacy compliance and risk mitigation for enterprises.
+
+Our brand voice is professional, knowledgeable, and solution-oriented. Keep all communication direct, concise, and free of jargon.
+
+We are launching a campaign to introduce ScaleSecure’s new SmartShield API, which simplifies sensitive data tokenization, accelerates compliance workflows, and integrates seamlessly into existing systems.
+
+Target Audience:
+Technical executives at B2B companies, such as CTOs, CIOs, and Heads of Engineering. They are focused on improving system reliability, meeting compliance requirements, and reducing security risks. Their pain points include the complexity of data privacy regulations, potential fines from non-compliance, and time wasted on custom solutions for sensitive data handling.
+
+Campaign Goal:
+Generate interest in ScaleSecure’s SmartShield API and schedule product demo calls with qualified leads.
+
+Competitive Landscape:
+Competitors include VaultPro and SecureFlow. VaultPro offers robust compliance features but requires significant setup time and lacks flexibility. SecureFlow is lightweight but doesn’t scale well for enterprise needs.
+
+Instruction:
+Write a concise, compelling cold outbound email (max 150 words) introducing SmartShield to a technical executive. The email should:
+
+Address the recipient's pain points.
+Highlight SmartShield’s key USPs, such as seamless integration, automated tokenization, and accelerated compliance workflows.
+Include a short, impactful testimonial from an existing customer to build credibility.
+End with a clear, actionable call-to-action to schedule a demo or conversation.
+Input:
+Product USPs:
+
+Automated tokenization of sensitive data across systems.
+Pre-built compliance workflows for regulations like GDPR, CCPA, and HIPAA.
+Lightning-fast integration with popular tech stacks.
+Scalable, enterprise-grade security features with low operational overhead.
+Customer Testimonial:
+"With ScaleSecure, we reduced compliance-related incidents by 70% and saved weeks of engineering effort on data tokenization. It just works." – John Smith, CTO of DataFlow Inc.`
+    },
+    {
+      name: 'Lookalike Lead List',
+      content: `Context:
+You are a data researcher tasked with generating a lead list for a B2B technology company. The goal is to identify potential customers that closely resemble an existing list of 10 key customers.
+
+The lead list should include companies with similar industries, revenue sizes, technology needs, or challenges. Use the provided list of companies as a reference to identify lookalike businesses.
+
+Target Audience:
+The target companies are mid-to-large enterprises in the B2B technology space. They are focused on innovation, leveraging cloud infrastructure, enhancing data security, scaling operations, and integrating AI into their workflows.
+
+Instruction:
+Based on the following list of 10 real companies, identify 20 similar companies that match their profile. Consider attributes like industry, company size, geographic location, and technology priorities.
+
+For each company in the lead list, provide the following details:
+
+- Company name
+- Industry
+- Headquarters location
+- Estimated annual revenue
+- Technology focus or relevant challenges
+
+Input:
+Existing Customer List:
+
+- Snowflake (Cloud Data Platforms)
+- Databricks (Data Engineering and AI)
+- MongoDB (Database as a Service)
+- HashiCorp (Infrastructure Automation)
+- Confluent (Event Streaming Platforms)
+- Okta (Identity and Access Management)
+- Palantir (Enterprise AI and Data Analytics)
+- Twilio (Communication APIs)
+- Splunk (Data Observability and Security)
+- Atlassian (Collaboration and Developer Tools)
+
+Output:
+A lead list of 20 companies with a similar profile to the above, formatted with the requested details for each company.`
     }
   ];
 
-  res.status(200).json(prompts);
+  const sortedPrompts = prompts.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  res.status(200).json(sortedPrompts);
 }

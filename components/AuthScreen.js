@@ -55,7 +55,7 @@ const AuthScreen = ({ onAuthenticate }) => {
   return (
     <div className="vh-100 d-flex justify-content-center align-items-center bg-light">
       <div className="p-4 border rounded bg-white shadow" style={{ width: '450px' }}>
-        <h2 className="text-center mb-4">Nimbus Prompter 2000</h2>
+        <h2 className="text-center mb-4 title">Nimbus Prompter 2000</h2>
         <div style={{ paddingLeft: '50px', paddingRight: '50px' }}>
           <input
             type="password"
