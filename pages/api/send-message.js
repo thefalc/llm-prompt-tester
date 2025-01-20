@@ -86,6 +86,7 @@ export default withIronSessionApiRoute(
         const lines = decoded.split('\n').filter((line) => line.trim() !== '');
 
         for (const line of lines) {
+          console.log(line);
           if (line.startsWith('data: ')) {
             const jsonData = line.substring(6); // Remove 'data: ' prefix
             if (jsonData === '[DONE]') {
