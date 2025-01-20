@@ -213,6 +213,7 @@ const ChatApp = () => {
               const content = jsonData.content;
   
               if (content) {
+                console.log(content)
                 // Stop showing the loading icon once content starts streaming
                 setShowLoadingIcon(false);
 
@@ -220,7 +221,7 @@ const ChatApp = () => {
                 for (let i = 0; i < content.length; i++) {
                   if (stopTypingRef.current) break;
   
-                  await new Promise((resolve) => setTimeout(resolve, 1));
+                  await new Promise((resolve) => setTimeout(resolve, 10));
   
                   if (lastMessageRef.current) {
                     lastMessageRef.current.text += content[i];

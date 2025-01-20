@@ -89,6 +89,7 @@ export default withIronSessionApiRoute(
           if (line.startsWith('data: ')) {
             const jsonData = line.substring(6); // Remove 'data: ' prefix
             if (jsonData === '[DONE]') {
+              console.log('DONE: ' + aiResponseContent);
               await addChatMessage(sessionId, { role: 'assistant', content: aiResponseContent });
               
               res.end();

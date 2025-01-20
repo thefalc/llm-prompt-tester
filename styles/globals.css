@@ -153,6 +153,11 @@ a {
   padding: 5px;
 }
 
+.ai-message blockquote {
+  margin-top: -15px;
+  margin-bottom: -15px;
+}
+
 @font-face {
   font-family: 'HarryP';
   src: url('/HARRYP__.TTF') format('truetype');
