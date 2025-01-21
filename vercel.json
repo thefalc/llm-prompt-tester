@@ -1,8 +1,0 @@
-{
-    "functions": {
-      "api/get-prompts.js": {
-        "memory": 3009,
-        "maxDuration": 300
-      }
-    }
-  }

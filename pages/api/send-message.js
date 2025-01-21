@@ -7,6 +7,8 @@ const { v4: uuidv4 } = require('uuid');
 //   runtime: 'edge',
 // };
 
+export const maxDuration = 300;
+
 // Limit the number of messages in context to avoid token overload
 const MAX_MESSAGES = 1000;
 
