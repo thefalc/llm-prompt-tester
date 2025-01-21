@@ -341,7 +341,7 @@ const ChatApp = () => {
                   <>
                     <strong>AI:</strong>
                     {isLastAIMessage && showLoadingIcon && (
-                      <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true">test</span>
+                      <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
                     )}
                     <ReactMarkdown
                       children={message.text}
