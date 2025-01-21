@@ -1,8 +1,14 @@
 import { getSystemMessage, getChatHistory, addChatMessage } from '../../utils/cache';
 const { ironOptions } = require('../../utils/iron-options');
 import { withIronSessionApiRoute } from 'iron-session/next';
+const { v4: uuidv4 } = require('uuid');
 
-const MAX_MESSAGES = 1000; // Limit the number of messages in context to avoid token overload
+// export const config = {
+//   runtime: 'edge',
+// };
+
+// Limit the number of messages in context to avoid token overload
+const MAX_MESSAGES = 1000;
 
 export default withIronSessionApiRoute(
   async function handler(req, res) {
@@ -23,7 +29,7 @@ export default withIronSessionApiRoute(
       let sessionId = req.session.id;
       console.log('sessionid: ' + sessionId);
       if (!sessionId) {
-        sessionId = crypto.randomUUID();
+        sessionId = uuidv4();
         req.session.id = sessionId;
         await req.session.save();
       }
@@ -39,6 +45,8 @@ export default withIronSessionApiRoute(
       }
 
       history.push({ role: 'user', content: message });
+
+      // console.log(history);
 
       // Add the user's message to the session history
       await addChatMessage(sessionId, { role: 'user', content: message });
@@ -65,7 +73,6 @@ export default withIronSessionApiRoute(
           model: 'gpt-4',
           messages,
           stream: true,
-          max_tokens: 2048,
         }),
       });
 
@@ -87,11 +94,11 @@ export default withIronSessionApiRoute(
         const lines = decoded.split('\n').filter((line) => line.trim() !== '');
 
         for (const line of lines) {
-          console.log(line);
+          // console.log(line);
           if (line.startsWith('data: ')) {
             const jsonData = line.substring(6); // Remove 'data: ' prefix
             if (jsonData === '[DONE]') {
-              console.log('DONE: ' + aiResponseContent);
+              // console.log('DONE: ' + aiResponseContent);
               await addChatMessage(sessionId, { role: 'assistant', content: aiResponseContent });
               
               res.end();
@@ -113,8 +120,8 @@ export default withIronSessionApiRoute(
         }
       }
 
-      // Ensure the response ends gracefully
-      res.end();
+      // // Ensure the response ends gracefully
+      // res.end();
     } catch (error) {
       console.error('Error in API:', error);
       res.status(500).json({ error: 'Internal server error' });

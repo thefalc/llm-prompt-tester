@@ -1,6 +1,7 @@
 import { getChatHistory } from '../../utils/cache';
 const { ironOptions } = require('../../utils/iron-options');
 import { withIronSessionApiRoute } from 'iron-session/next';
+const { v4: uuidv4 } = require('uuid');
 
 // Wrap the handler with Iron Session
 export default withIronSessionApiRoute(async function handler(req, res) {
@@ -12,7 +13,7 @@ export default withIronSessionApiRoute(async function handler(req, res) {
   // Retrieve or initialize session data
   let sessionId = req.session.id;
   if (!sessionId) {
-    sessionId = crypto.randomUUID(); // Generate a new session ID
+    sessionId = uuidv4();
     req.session.id = sessionId;
     await req.session.save();
   }

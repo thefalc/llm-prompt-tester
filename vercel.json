@@ -1,0 +1,8 @@
+{
+    "functions": {
+      "api/send-message.js": {
+        "memory": 3009,
+        "maxDuration": 300
+      }
+    }
+  }
