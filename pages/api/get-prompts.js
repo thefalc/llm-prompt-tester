@@ -150,7 +150,7 @@ Generate a report that includes:
 - Revenue Forecasting: Predict revenue for the next quarter for each source if current trends continue.
 
 Output Format:
-Deliver insights in a summarized table and include a list of recommended actions for the marketing team to optimize campaigns and revenue growth."`
+Deliver insights in a summarized table and include a list of recommended actions for the marketing team to optimize campaigns and revenue growth.`
     },
     {
       name: 'Intro Rewrite',
