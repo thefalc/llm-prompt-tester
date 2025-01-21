@@ -221,7 +221,7 @@ const ChatApp = () => {
                 for (let i = 0; i < content.length; i++) {
                   if (stopTypingRef.current) break;
   
-                  await new Promise((resolve) => setTimeout(resolve, 10));
+                  await new Promise((resolve) => setTimeout(resolve, 5));
   
                   if (lastMessageRef.current) {
                     lastMessageRef.current.text += content[i];
@@ -341,7 +341,7 @@ const ChatApp = () => {
                   <>
                     <strong>AI:</strong>
                     {isLastAIMessage && showLoadingIcon && (
-                      <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+                      <span className="ms-2 spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true">test</span>
                     )}
                     <ReactMarkdown
                       children={message.text}
