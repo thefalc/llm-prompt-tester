@@ -83,6 +83,7 @@ const ChatApp = () => {
 
   useEffect(() => {
     const lastMessage = chatHistory[chatHistory.length - 1];
+    console.log(lastMessage?.sender + ' ' + hasScrolledToAI);
     if (lastMessage?.sender === 'ai' && !hasScrolledToAI) {
       if (aiStartRef.current) {
         aiStartRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -157,11 +158,18 @@ const ChatApp = () => {
     if (!userInput || isProcessing) return;
   
     setIsProcessing(true);
-    setShowLoadingIcon(true); // Show the loading icon
+    setShowLoadingIcon(true);
+    setHasScrolledToAI(false); 
     stopTypingRef.current = false;
   
     const newMessage = { sender: 'user', text: userInput };
-    setChatHistory((prevHistory) => [...prevHistory, newMessage]);
+    const aiMessagePlaceholder = { sender: 'ai', text: '' };
+    setChatHistory((prevHistory) => {
+      const updatedHistory = [...prevHistory, newMessage, aiMessagePlaceholder];
+      lastMessageRef.current = updatedHistory[updatedHistory.length - 1];
+      return updatedHistory;
+    });
+
     setUserInput('');
 
     if (chatInputRef.current) {
@@ -191,13 +199,6 @@ const ChatApp = () => {
       let done = false;
       let buffer = '';
   
-      const aiMessage = { sender: 'ai', text: '' };
-      setChatHistory((prevHistory) => {
-        const updatedHistory = [...prevHistory, aiMessage];
-        lastMessageRef.current = updatedHistory[updatedHistory.length - 1];
-        return updatedHistory;
-      });
-  
       while (!done) {
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
@@ -214,7 +215,6 @@ const ChatApp = () => {
               const content = jsonData.content;
   
               if (content) {
-                console.log(content)
                 // Stop showing the loading icon once content starts streaming
                 setShowLoadingIcon(false);
 
