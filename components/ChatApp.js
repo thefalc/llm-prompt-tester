@@ -154,41 +154,99 @@ const ChatApp = () => {
     }
   };
 
-  const sendMessage = async () => {
-    if (!userInput || isProcessing) return;
-  
+  const initializeSendMessage = () => {
     setIsProcessing(true);
     setShowLoadingIcon(true);
-    setHasScrolledToAI(false); 
+    setHasScrolledToAI(false);
     stopTypingRef.current = false;
+  };
+
+  const createNewMessage = () => {
+    return { sender: 'user', text: userInput };
+  };
   
-    const newMessage = { sender: 'user', text: userInput };
-    const aiMessagePlaceholder = { sender: 'ai', text: '' };
+  const createAIMessagePlaceholder = () => {
+    return { sender: 'ai', text: '' };
+  };
+
+  const updateChatHistory = (newMessage, aiMessagePlaceholder) => {
     setChatHistory((prevHistory) => {
       const updatedHistory = [...prevHistory, newMessage, aiMessagePlaceholder];
       lastMessageRef.current = updatedHistory[updatedHistory.length - 1];
       return updatedHistory;
     });
+  };
 
-    setUserInput('');
-
+  const adjustTextareaHeight = () => {
     if (chatInputRef.current) {
       chatInputRef.current.adjustHeight();
     }
+  };
+
+  const fetchMessage = async (message) => {
+    return await fetch('/api/send-message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+      signal: controllerRef.current.signal,
+    });
+  };
+
+  const cleanupAfterSendMessage = () => {
+    typingBufferRef.current = '';
+    setIsProcessing(false);
+    controllerRef.current = null;
+    stopTypingRef.current = false;
+    setShowLoadingIcon(false);
+  };
+
+  const appendContentToAIMessage = async (content) => {
+    for (let i = 0; i < content.length; i++) {
+      if (stopTypingRef.current) break;
+  
+      await new Promise((resolve) => setTimeout(resolve, 5));
+  
+      if (lastMessageRef.current) {
+        lastMessageRef.current.text += content[i];
+        setChatHistory((prevHistory) => [...prevHistory]);
+      }
+    }
+  };
+
+  const handleStreamedLine = (line) => {
+    try {
+      const jsonData = JSON.parse(line);
+      const content = jsonData.content;
+  
+      if (content) {
+        setShowLoadingIcon(false); // Stop showing the loading icon once streaming starts
+  
+        typingBufferRef.current += content;
+        appendContentToAIMessage(content);
+      }
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!userInput || isProcessing) return;
+  
+    initializeSendMessage();
+  
+    const newMessage = createNewMessage();
+    const aiMessagePlaceholder = createAIMessagePlaceholder();
+    updateChatHistory(newMessage, aiMessagePlaceholder);
+
+    setUserInput('');
+    adjustTextareaHeight();
   
     controllerRef.current = new AbortController();
   
     try {
-      const response = await fetch('/api/send-message', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: userInput,
-        }),
-        signal: controllerRef.current.signal,
-      });
+      const response = await fetchMessage(userInput);
   
       if (!response.body) {
         throw new Error('Server did not return a readable stream');
@@ -219,6 +277,7 @@ const ChatApp = () => {
                 setShowLoadingIcon(false);
 
                 typingBufferRef.current += content;
+
                 for (let i = 0; i < content.length; i++) {
                   if (stopTypingRef.current) break;
   
@@ -241,11 +300,7 @@ const ChatApp = () => {
         console.error('Error sending message:', error);
       }
     } finally {
-      typingBufferRef.current = '';
-      setIsProcessing(false);
-      controllerRef.current = null;
-      stopTypingRef.current = false;
-      setShowLoadingIcon(false);
+      cleanupAfterSendMessage();
     }
   };
   
