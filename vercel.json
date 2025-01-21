@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/send-message.js": {
+      "api/send-message": {
         "memory": 3009,
         "maxDuration": 300
       }
