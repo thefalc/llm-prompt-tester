@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import ChatInput from './ChatInput';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import ChatOptions from './ChatOptions';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import remarkBreaks from 'remark-breaks';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ChatApp = () => {
   const [systemMessage, setSystemMessage] = useState('');
@@ -264,7 +265,21 @@ const ChatApp = () => {
 
   return (
     <div className="d-flex vh-100">
-      {/* Options Section */}
+      <ChatOptions
+        systemMessage={systemMessage}
+        setSystemMessage={setSystemMessage}
+        saveSystemMessage={saveSystemMessage}
+        isSaving={isSaving}
+        personality={personality}
+        setPersonality={setPersonality}
+        personalities={personalities}
+        promptTemplate={promptTemplate}
+        setPromptTemplate={setPromptTemplate}
+        prompts={prompts}
+        handlePromptSelect={handlePromptSelect}
+        clearChat={clearChat}
+      />
+      {/* Options Section
       <div className="options-container p-3 border-end d-flex flex-column" style={{ width: '250px' }}>
         <textarea
           value={systemMessage}
@@ -320,7 +335,7 @@ const ChatApp = () => {
         <button className="btn btn-secondary w-100 mt-auto" onClick={clearChat}>
           Clear Chat
         </button>
-      </div>
+      </div> */}
 
       {/* Chat Section */}
       <div className={`flex-grow-1 ${layoutStyle}`}>
