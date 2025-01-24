@@ -256,6 +256,72 @@ Existing Customer List:
 
 Output:
 A lead list of 20 companies with a similar profile to the above, formatted with the requested details for each company.`
+    },
+    {
+      name: 'Win/Loss Analysis',
+      content: `Context:
+You are a data analyst tasked with performing a win/loss analysis for a B2B data infrastructure company called Nimbus Data, which specializes in high-performance data streaming and storage solutions. The goal is to identify trends in customer behavior, reasons for winning or losing deals, and actionable insights to improve future sales performance.
+
+The analysis focuses on opportunities in Stage 2 or beyond within the Salesforce pipeline, examining factors such as industry, deal size, geographic region, and competition.
+
+Target Audience:
+Nimbus Data primarily targets mid-sized to enterprise companies in the technology, finance, healthcare, retail, and energy sectors. Key decision factors for customers include scalability, compliance, regional support, price, and technical integration.
+
+Competitors include CloudFlex (healthcare focus, affordable pricing) and StreamEase (regional coverage, fast implementation).
+
+Instruction:
+Analyze the provided Salesforce data and deliver insights on the following:
+
+Overall win/loss rates.
+Breakdown of win/loss rates by region, industry, and deal size.
+Most common reasons for losing deals and suggestions for addressing these issues.
+Key factors contributing to wins and how to leverage them.
+Recommendations for improving performance in underperforming segments.
+For each opportunity, consider attributes such as the close reason, key competitor, and region.
+
+Input:
+Salesforce Opportunities Data (Stage 2+), formatted as a CSV:
+
+csv
+Copy
+Edit
+Opportunity ID,Account Name,Industry,Deal Size,Stage,Outcome,Close Reason,Key Competitor,Region,Close Date
+001,Acme Corp,Manufacturing,250000,Closed Won,Won,Superior performance and scalability,None,North America,2024-12-15
+002,Beta Solutions,Healthcare,500000,Closed Lost,Lost,Lack of healthcare-specific compliance,CloudFlex,EMEA,2024-12-20
+003,Gamma Tech,Technology,300000,Closed Lost,Lost,Price too high,StreamEase,APAC,2025-01-05
+004,Delta Innovations,Retail,150000,Closed Won,Won,Strong relationship and technical support,None,North America,2025-01-10
+005,Epsilon Logistics,Transportation,400000,Closed Lost,Lost,Limited regional support,CloudFlex,LATAM,2025-01-15
+006,Zeta Enterprises,Finance,600000,Closed Won,Won,Integration with existing tools,None,EMEA,2025-01-20
+007,Omega Partners,Energy,200000,Closed Lost,Lost,Long implementation timelines,StreamEase,North America,2025-01-22
+Output:
+Provide a summary of insights based on the input data, including:
+
+Key metrics (e.g., win/loss rates by region, industry, and deal size).
+Analysis of common reasons for loss and suggestions for improvement.
+Highlighted factors driving wins and recommendations to capitalize on them.
+Actionable insights to improve performance in underperforming segments.`
+    },
+    {
+      name: 'Blog Title Brainstorm',
+      content: `Context:
+You are a content strategist tasked with brainstorming potential titles for a technical blog post. The goal is to craft compelling titles that accurately reflect the blog content, resonate with a technical audience, and spark interest. The blog post may explore technical concepts, provide practical guidance, or analyze industry trends.
+
+Target Audience:
+The primary audience is technical professionals, such as engineers, product managers, CTOs, and other technology leaders. They are interested in clear, actionable insights and thought-provoking content that aligns with their professional interests.
+
+Instruction:
+Based on the blog summary below, brainstorm 10 potential titles for the post. Focus on clarity, relevance, and appeal to a technical and professional audience.
+
+Blog:
+AI agents are reshaping industries by automating complex workflows and improving decision-making. However, not every problem requires a fully agentic solution. Sometimes, simple prompts or structured workflows are more practical. The blog explores:
+
+Prompt-based AI systems: Best for isolated, single-step tasks.
+Workflows: Ideal for predictable, repeatable processes.
+Agents: Suited for dynamic, multi-step tasks requiring adaptability.
+It discusses how to choose the right approach, avoiding over-engineering and ensuring solutions align with business needs. Real-world examples and challenges, such as data complexity and engineering hurdles, are also covered.
+
+Output:
+A list of 10 potential titles for the blog post. Each title should be concise, engaging, and reflective of the content, designed to attract readers with a technical background.`
     }
   ];
 

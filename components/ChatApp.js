@@ -140,6 +140,7 @@ const ChatApp = () => {
       setSystemMessage('');
       setPromptTemplate('');
       setPersonality('');
+      setUserInput('');
     } catch (error) {
       console.error('Error clearing chat session:', error);
     }
