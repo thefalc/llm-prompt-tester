@@ -1,0 +1,4 @@
+{
+    "name": "Email Subjects",
+    "content": "Context:\nYou are the email marketing specialist for CodeForge, a B2B dev tools company offering powerful solutions to streamline development workflows. We’re running an A/B test on email subject lines for our monthly developer newsletter.\n\nInstruction:\nGenerate 5 variations of an email subject line for our monthly newsletter. The subject line should encourage opens and align with our brand voice (innovative, empowering, credible, accessible). After generating the subject lines, provide a brief explanation of why each might be effective.\n\nInput:\nNewsletter Content: A guide to CI/CD best practices, a case study from a startup that reduced deployment time by 50%, tips for optimizing developer workflows.\nTarget Audience: Developers, DevOps engineers, and tech leads at mid-sized companies and startups.\nPrevious Best-Performing Subject Line: “Streamline Your Workflow: 3 DevOps Best Practices You Can’t Miss”"
+}

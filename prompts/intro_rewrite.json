@@ -1,0 +1,4 @@
+{
+    "name": "Intro Rewrite",
+    "content": "Context:\nYou are a professional technical content writer with a deep understanding about what engages a technical audience.\n\nInstruction:\nRewrite the blog introduction below to be more technical and engaging. Keep the writing concise, direct, and free of jargon. Make it sound like a human wrote it and not produced by marketing.\n\nBlog Introduction:\nIntegrating Salesforce with Snowflake enables businesses to combine CRM data with data warehousing capabilities. This integration centralizes data, providing opportunities for analysis and improved decision-making. In a data-driven environment, consolidating information is increasingly important.\n\nThis guide outlines the steps to set up the integration and provides recommendations for managing and analyzing data within Salesforce and Snowflake to maximize their combined utility."
+}
