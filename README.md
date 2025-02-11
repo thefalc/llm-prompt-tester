@@ -25,18 +25,18 @@ This is a ChatGPT clone built with **Next.js** and **MongoDB**, designed specifi
    ```sh
    git clone https://github.com/thefalc/llm-prompt-tester.git
    cd llm-prompt-tester
-1. Create a .env file with the following:
+2. Create a .env file with the following:
 ```bash
 OPENAI_API_KEY='REPLACE_ME'
 MONGODB_URI='REPLACE_ME'
 SESSION_PASSWORD='REPLACE_ME'
 ```
-1. Run the development server:
+3. Run the development server:
 ```bash
 npm install
 npm run dev
 ```
-1. Open http://localhost:3000 in your browser.
+4. Open http://localhost:3000 in your browser.
 
 # 📚 Usage
 
